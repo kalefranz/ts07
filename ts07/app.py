@@ -3,18 +3,22 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from logging import getLogger
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-log = getLogger(__name__)
-
-from .bottle import route, run
+from .bottle import response, route, run
 from .ufo import Ufo
 from .phue import Bridge
 
+log = getLogger(__name__)
 
 hue_ip = '10.0.1.103'
 ufo_ceiling_1 = '10.0.1.111'
 ufo_under_bar = '10.0.1.112'
 ufo_under_cabinets = '10.0.1.113'
 ufo_back_bar_1 = '10.0.1.114'
+
+# hue notes:
+#  hue has max 65536
+#  saturation has max 254
+#  brightness has max 254
 
 
 def execute_tasks(tasks):
@@ -31,7 +35,7 @@ def set_red():
         light = b.lights[light_id]
         light.on = True
         light.hue = 0
-        light.saturation = 255
+        light.saturation = 254
         light.brightness = 160
 
     tasks = (
@@ -52,7 +56,7 @@ def set_green():
         light = b.lights[light_id]
         light.on = True
         light.hue = 0
-        light.saturation = 255
+        light.saturation = 254
         light.brightness = 160
 
     tasks = (
@@ -73,11 +77,11 @@ def set_blue():
         light = b.lights[light_id]
         light.on = True
         light.hue = 43690
-        light.saturation = 255
+        light.saturation = 254
         light.brightness = 92
 
     tasks = (
-        (lambda: Ufo(ufo_ceiling_1).rgbw(0, 0, 128, 0).on(), ()),
+        (lambda: Ufo(ufo_ceiling_1).rgbw(0, 0, 80, 0).on(), ()),
         (lambda: Ufo(ufo_under_bar).rgbw(0, 0, 128, 0).on(), ()),
         (lambda: Ufo(ufo_under_cabinets).rgbw(0, 0, 255, 0).on(), ()),
         (lambda: Ufo(ufo_back_bar_1).rgbw(0, 0, 255, 0).on(), ()),
@@ -94,7 +98,7 @@ def set_light_blue():
         light = b.lights[light_id]
         light.on = True
         light.hue = 43690
-        light.saturation = 255
+        light.saturation = 254
         light.brightness = 92
 
     tasks = (
@@ -116,7 +120,7 @@ def set_white():
         light.on = True
         light.hue = 37736
         light.saturation = 230
-        light.brightness = 255
+        light.brightness = 254
 
     tasks = (
         (lambda: Ufo(ufo_ceiling_1).rgbw(0, 0, 0, 192).on(), ()),
@@ -145,6 +149,13 @@ def set_off():
         (set_hue_off, (1,)),
     )
     execute_tasks(tasks)
+
+
+@route('/get_status')
+def get_status():
+    result = Ufo.all_status()
+    response.content_type = 'text/plain'
+    return result
 
 
 if __name__ == "__main__":

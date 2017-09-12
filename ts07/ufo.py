@@ -83,8 +83,12 @@ class Ufo(object):
 
     @classmethod
     def all_status(cls):
+        builder = []
         for ufo in cls.discover_all():
             print(ufo)
+            builder.append(str(ufo))
+        builder.append('')
+        return '\n'.join(builder)
 
     def __init__(self, ip_address, hw_address=None):
         self.ip_address = ip_address
