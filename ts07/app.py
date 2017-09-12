@@ -34,9 +34,9 @@ def set_red():
     def set_hue_red(light_id):
         light = b.lights[light_id]
         light.on = True
-        light.hue = 0
-        light.saturation = 254
-        light.brightness = 160
+        light.hue = 430
+        light.saturation = 252
+        light.brightness = 252
 
     tasks = (
         (lambda: Ufo(ufo_ceiling_1).rgbw(255, 0, 0, 0).on(), ()),
@@ -55,9 +55,9 @@ def set_green():
     def set_hue_green(light_id):
         light = b.lights[light_id]
         light.on = True
-        light.hue = 0
+        light.hue = 25699
         light.saturation = 254
-        light.brightness = 160
+        light.brightness = 253
 
     tasks = (
         (lambda: Ufo(ufo_ceiling_1).rgbw(0, 255, 0, 0).on(), ()),
@@ -76,9 +76,9 @@ def set_blue():
     def set_hue_blue(light_id):
         light = b.lights[light_id]
         light.on = True
-        light.hue = 43690
-        light.saturation = 254
-        light.brightness = 92
+        light.hue = 47112
+        light.saturation = 253
+        light.brightness = 252
 
     tasks = (
         (lambda: Ufo(ufo_ceiling_1).rgbw(0, 0, 80, 0).on(), ()),
@@ -97,9 +97,9 @@ def set_light_blue():
     def set_hue_blue(light_id):
         light = b.lights[light_id]
         light.on = True
-        light.hue = 43690
-        light.saturation = 254
-        light.brightness = 92
+        light.hue = 42690
+        light.saturation = 216
+        light.brightness = 254
 
     tasks = (
         (lambda: Ufo(ufo_ceiling_1).rgbw(155, 155, 255, 0).on(), ()),
@@ -118,8 +118,8 @@ def set_white():
     def set_hue_blue(light_id):
         light = b.lights[light_id]
         light.on = True
-        light.hue = 37736
-        light.saturation = 230
+        light.hue = 38373
+        light.saturation = 254
         light.brightness = 254
 
     tasks = (
@@ -153,7 +153,21 @@ def set_off():
 
 @route('/get_status')
 def get_status():
+    b = Bridge(hue_ip)
+    def get_hue_status(light_id):
+        light = b.lights[light_id]
+        builder = []
+        builder.append("hue id: %s" % light_id)
+        builder.append("  power: %s" % ("on" if light.on else "off"))
+        builder.append("  hue: %s" % light.hue)
+        builder.append("  saturation: %s" % light.saturation)
+        builder.append("  brightness: %s" % light.brightness)
+        builder.append("")
+        return '\n'.join(builder)
+
     result = Ufo.all_status()
+    result += get_hue_status(0)
+    result += get_hue_status(1)
     response.content_type = 'text/plain'
     return result
 
