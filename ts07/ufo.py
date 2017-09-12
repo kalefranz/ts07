@@ -64,7 +64,7 @@ class Ufo(object):
         except timeout:
             s.close()
 
-        return discovered
+        return tuple(sorted(discovered, key=lambda x: x.ip_address))
 
     @classmethod
     def all_on(cls):
