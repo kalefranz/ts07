@@ -173,4 +173,4 @@ def get_status():
 
 
 if __name__ == "__main__":
-    run(host='localhost', port=3607)
+    run(host='0.0.0.0', port=3607)
