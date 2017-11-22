@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from logging import getLogger
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from .bottle import response, route, run
+from .bottle import response, route, run, redirect
 from .ufo import Ufo
 from .phue import Bridge
 
@@ -47,6 +47,7 @@ def set_red():
         (set_hue_red, (1,)),
     )
     execute_tasks(tasks)
+    redirect("/")
 
 
 @route('/set_green')
@@ -68,6 +69,7 @@ def set_green():
         (set_hue_green, (1,)),
     )
     execute_tasks(tasks)
+    redirect("/")
 
 
 @route('/set_blue')
@@ -89,6 +91,7 @@ def set_blue():
         (set_hue_blue, (1,)),
     )
     execute_tasks(tasks)
+    redirect("/")
 
 
 @route('/set_light_blue')
@@ -110,6 +113,7 @@ def set_light_blue():
         (set_hue_blue, (1,)),
     )
     execute_tasks(tasks)
+    redirect("/")
 
 
 @route('/set_white')
@@ -131,6 +135,7 @@ def set_white():
         (set_hue_blue, (1,)),
     )
     execute_tasks(tasks)
+    redirect("/")
 
 
 @route('/set_off')
@@ -149,6 +154,7 @@ def set_off():
         (set_hue_off, (1,)),
     )
     execute_tasks(tasks)
+    redirect("/")
 
 
 @route('/get_status')
@@ -170,6 +176,35 @@ def get_status():
     result += get_hue_status(1)
     response.content_type = 'text/plain'
     return result
+
+
+@route('/')
+def index():
+    response.content_type = 'text/html; charset=latin9'
+    return index_html
+
+
+index_html = """<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/superhero/bootstrap.min.css">
+  </head>
+  <body>
+
+<div class="container-fluid">
+  <a href="/set_off" class="btn btn-outline-primary btn-lg btn-block">Off</a>
+  <a href="/set_white" class="btn btn-primary btn-lg btn-block" style="background-color: #fff; color: #000;">White</a>
+  <a href="/set_blue" class="btn btn-primary btn-lg btn-block" style="background-color: #00f;">Blue</a>
+  <a href="/set_green" class="btn btn-primary btn-lg btn-block btn-success">Green</a>
+  <a href="/set_light_blue" class="btn btn-primary btn-lg btn-block btn-info">Light Blue</a>
+  <a href="/set_red" class="btn btn-primary btn-lg btn-block btn-danger">Red</a>
+</div>
+
+  </body>
+</html>
+"""
 
 
 if __name__ == "__main__":
