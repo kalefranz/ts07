@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# nohup ./run-app 2>&1 > /home/pi/ts07/app.log &
+
+python3 -m ts07.app 2>&1
+
